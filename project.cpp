@@ -1,51 +1,58 @@
 #include <iostream>
 #include<bits/stdc++.h>
 using namespace std;
-//merge sort function time complexity :o(nlog(n))
-void merge(vector<pair<int,string>>&v,int  low, int mid,int  high)
+// time complexity of code :o(n(log(n)))
+
+
+// merge function time complexity :o(n)
+void merge(vector<pair<float,string>>&v,int  begin, int mid,int  end)
 {
-    int i, j, k;
-    i = low;
-    k = 0;
-    j = mid + 1;
-    vector<pair<int,string>> temp(high-low+1);
-    while (i <= mid && j <= high)
+    int indexOfLeftVector, i,indexOfRightVector, indexOfTempVector;
+    indexOfLeftVector = begin;
+    indexOfTempVector = 0;
+    indexOfRightVector = mid + 1;
+    vector<pair<float,string>> temp(end-begin+1);
+    while (indexOfLeftVector <= mid && indexOfRightVector <= end)
     {
-        if ( v[i].first< v[j].first)
+        if ( v[indexOfLeftVector].first< v[indexOfRightVector].first)
         {
-            temp[k].first = v[i].first;
-            temp[k].second = v[i].second;
-            i++;
+            temp[indexOfTempVector].first = v[indexOfLeftVector].first;
+            temp[indexOfTempVector].second = v[indexOfLeftVector].second;
+            indexOfLeftVector++;
         }
         else
         {
-            temp[k].first = v[j].first;
-            temp[k].second = v[j].second;
-            j++;
+            temp[indexOfTempVector].first = v[indexOfRightVector].first;
+            temp[indexOfTempVector].second = v[indexOfRightVector].second;
+            indexOfRightVector++;
         }
-        k++;
+        indexOfTempVector++;
     }
-    while (i <= mid)
+    // Insert all the remaining values from i to mid into temp[].
+    while (indexOfLeftVector <= mid)
     {
-        temp[k].first = v[i].first;
-        temp[k].second = v[i].second;
-        k++;
-        i++;
+        temp[indexOfTempVector].first = v[indexOfLeftVector].first;
+        temp[indexOfTempVector].second = v[indexOfLeftVector].second;
+        indexOfTempVector++;
+        indexOfLeftVector++;
     }
-    while (j <= high)
+
+    // Insert all the remaining values from j to high into temp[].
+    while (indexOfRightVector <= end)
     {
-        temp[k].first = v[j].first;
-        temp[k].second = v[j].second;
-        k++;
-        j++;
+        temp[indexOfTempVector].first = v[indexOfRightVector].first;
+        temp[indexOfTempVector].second = v[indexOfRightVector].second;
+        indexOfTempVector++;
+        indexOfRightVector++;
     }
-    for (i = low; i <= high; i++)
+    for (i = begin; i <= end; i++)
     {
-        v[i].first =temp[i-low].first;
-        v[i].second=temp[i-low].second;
+        v[i].first =temp[i-begin].first;
+        v[i].second=temp[i-begin].second;
     }
 }
-void mergeSort(vector<pair<int,string>>&v,int  begin, int  end)
+// merge sort time complexity :o(nlog(n))
+void mergeSort(vector<pair<float,string>>&v,int  begin, int  end)
 {
     if (begin >= end)
         return;
@@ -54,15 +61,16 @@ void mergeSort(vector<pair<int,string>>&v,int  begin, int  end)
     mergeSort(v,mid+1, end);
     merge(v, begin, mid, end);
 }
-
-//binary search function time complexity: O(log(n))
-float binary_search(vector<pair<int,string>>&v,int cost,int size)
+//binary search function time :  O(log(n))
+int binary_search(vector<pair<float,string>>&items,float cost,int numbers)
 {
-    int l = 0, r = size, mid,ans=-1;
+
+    int l = 0, r = numbers, mid,ans=-1;
     while (l <= r) {
         mid = (l + r) / 2;
-        if ( v[mid].first<=cost) {
+        if ( items[mid].first<=cost) {
             l= mid + 1;
+
         }
         else {
             ans=mid;
@@ -71,28 +79,40 @@ float binary_search(vector<pair<int,string>>&v,int cost,int size)
     }
     return ans;
 }
-//print function time complexity :o(n)
-void print_ans(vector<pair<int,string>>&v,int mid)
-{
-    cout<<"you can buy from this brand :"<<endl;
-    for(int j=0;j<mid;j++)    {
-        cout<<j+1<<". "<<v[j].second<<"  "<<v[j].first<<endl;
-    }
-}
+// any loop in this code is :o(n)
+// any cout in this code is :o(1)
 int main() {
-    float cost, num;
-    cout << "please enter your budget :" << endl;
+    int  num;
+    float cost;
+    cout<<"    WELCOM   \n";
+    cout << "PLEASE ENTER YOUR BUDGET :" << endl;
     cin >> cost;
-    cout << "please enter number of brands :" << endl;
+    cout << "PLEASE ENTER NUMBER OF BRANDS :" << endl;
     cin >> num;
-    cout << "please enter tne name of brand and the cost of item :" << endl;
-    vector<pair<int,string >> v(num);
-    // loop time complexity o(n)
+    cout << "PLEASE ENTER THE NAME OF BRAND AND THE COST OF ITEMS :" << endl;
+    vector<pair<float,string >> items(num);
+    // for enter values
     for (int i = 0; i < num; i++) {
-        cin >> v[i].second >>v[i].first;
+        cin >>  items[i].second >>items[i].first;
     }
-    mergeSort(v,0,num-1);
-    float x= binary_search(v,cost,num);
-    print_ans(v,x);
+    //to sort the vector
+    mergeSort( items,0,num-1);// o(nlog(n))
+    // to get the value of binary search function
+    int value= binary_search( items,cost,num);// o(log(n))
+    // print the answer
+    if(value>0)
+    {
+
+        cout<<"YOU CAN BUY FROM THIS BRANDS  :"<<endl;
+        for (int j = 0; j < value; j++) {
+            cout <<j+1<<"- "<<items[j].second << " " << items[j].first << endl;
+
+        }
+    }
+    else {
+        cout<<"SORRY YOU CAN'T BUY ANY PRODUCT YOUR BUDGET IS VERY LOW "<<endl;
+    }
+    cout<<"THANK YOU FOR USING THIS APPLICATION\n";
     return 0;
+
 }
