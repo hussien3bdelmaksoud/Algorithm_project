@@ -1,2 +1,2 @@
 # Algorithm_project
-Sorting restaurants based on your budget
+Order based on your budget
